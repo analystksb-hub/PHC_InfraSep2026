@@ -1,6 +1,5 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Delhi PHC Interactive Dashboard – Sep 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>:root{--bg:#f3f4fb;--card:#fff;--tx:#1f2330;--mu:#6b7280;--bd:#e3e6f2;--hl:#fff7d6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12131a;--card:#1c1e29;--tx:#e8eaf3;--mu:#9aa0b4;--bd:#2d3042;--hl:#3a3516}}
 :root[data-theme="dark"]{--bg:#12131a;--card:#1c1e29;--tx:#e8eaf3;--mu:#9aa0b4;--bd:#2d3042;--hl:#3a3516}
@@ -36,7 +35,7 @@ td.r,th.r{text-align:right}tr.row{cursor:pointer}tr.row:hover{background:var(--h
 #toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#111;color:#fff;padding:9px 16px;border-radius:10px;font-size:13px;z-index:99;display:none}
 .hint{color:var(--mu);font-size:12px;margin:0 0 6px}</style></head><body>
 <div class="hero"><h1>Delhi Primary Health Facilities – Interactive Dashboard</h1><p>Infrastructure · Services · Equipment · Human resources · Sep 2026 data (as on 18 Nov 2026) · Click any score card, chart bar or table row to cross-filter everything</p></div>
-<div class="bar"><label>District<select id="sd"></select></label><label>Facility type<select id="st"></select></label><label>Health agency<select id="sa"></select></label><label>Health facility<select id="sf"></select></label><button id="rs">Reset all</button><button class="dl" id="dlall" data-t="all">⬇ Download all tables (xlsx)</button></div><div id="toast"></div>
+<div class="bar"><label>District<select id="sd"></select></label><label>Facility type<select id="st"></select></label><label>Health agency<select id="sa"></select></label><label>Health facility<select id="sf"></select></label><button id="rs">Reset all</button></div>
 <div class="act" id="act"></div>
 <div class="cards" id="cards"></div>
 <p class="hint">Tip: click a card or bar once to show facilities <b>with</b> it, again for <b>without</b>, a third time to clear.</p>
@@ -45,7 +44,7 @@ td.r,th.r{text-align:right}tr.row{cursor:pointer}tr.row:hover{background:var(--h
 <div class="c" style="--a:#14b8a6"><h3 id="bt"></h3><div class="w"><canvas id="b"></canvas></div></div></div>
 <h2 class="sec"><i style="background:#3b82f6"></i>Physical infrastructure</h2>
 <div class="g"><div class="c f" style="--a:#3b82f6"><h3>Availability – % of facilities with "Yes" <small style="color:var(--mu)">(click bar)</small></h3><div class="w t"><canvas id="c"></canvas></div></div>
-<div class="c f" style="--a:#3b82f6"><button class="dl dlbar" data-t="inf">⬇ xlsx</button><h3>Facility-wise infrastructure availability <small style="color:var(--mu)">(click a header to sort · click a % cell to filter with/without · click a facility row to open it)</small></h3><div class="tw it" id="ift" style="max-height:520px"></div></div></div>
+<div class="c f" style="--a:#3b82f6"><h3>Facility-wise infrastructure availability <small style="color:var(--mu)">(click a header to sort · click a % cell to filter with/without · click a facility row to open it)</small></h3><div class="tw it" id="ift" style="max-height:520px"></div></div></div>
 <h2 class="sec"><i style="background:#f59e0b"></i>Services</h2>
 <div class="g"><div class="c" style="--a:#f59e0b"><h3>Clinical services – how offered (facilities)</h3><div class="w t"><canvas id="e"></canvas></div></div>
 <div class="c" style="--a:#f59e0b"><h3>Diagnostic test coverage (facilities)</h3><div class="w t"><canvas id="f"></canvas></div></div>
@@ -54,10 +53,10 @@ td.r,th.r{text-align:right}tr.row{cursor:pointer}tr.row:hover{background:var(--h
 <h2 class="sec"><i style="background:#8b5cf6"></i>Equipment</h2>
 <div class="g"><div class="c f" style="--a:#8b5cf6"><h3>% of facilities with functional item</h3><div class="w tt"><canvas id="i"></canvas></div></div></div>
 <h2 class="sec"><i style="background:#ec4899"></i>Human resources</h2>
-<div class="g"><div class="c f" style="--a:#ec4899"><button class="dl dlbar" data-t="hr">⬇ xlsx</button><h3>HR count table <small style="color:var(--mu)">(approved = regular + contractual + outsourced · click a row to filter facilities that have/lack the role)</small></h3><div class="tw" id="hrt"></div></div>
+<div class="g"><div class="c f" style="--a:#ec4899"><h3>HR count table <small style="color:var(--mu)">(approved = regular + contractual + outsourced · click a row to filter facilities that have/lack the role)</small></h3><div class="tw" id="hrt"></div></div>
 <div class="c" style="--a:#ec4899"><h3>Approved posts vs staff in position</h3><div class="w t"><canvas id="j"></canvas></div></div>
 <div class="c" style="--a:#ec4899"><h3 id="zt">Facilities with no one in position</h3><div class="w t"><canvas id="l"></canvas></div></div>
-<div class="c f" style="--a:#ec4899"><button class="dl dlbar" data-t="fac">⬇ xlsx</button><h3>Facility-wise staff count <small style="color:var(--mu)">(click a header to sort · click a row to open the facility)</small></h3><div class="tw" id="fwt"></div></div></div>
+<div class="c f" style="--a:#ec4899"><h3>Facility-wise staff count <small style="color:var(--mu)">(click a header to sort · click a row to open the facility)</small></h3><div class="tw" id="fwt"></div></div></div>
 <div id="one" class="hide"></div>
 <p class="hint" style="margin-top:20px">Source: PHC Infra Sep 2026 data (as on 18 Nov 2026) – sheets Data Item Wise Report, Data Item Wise Report (2), PHC_HRSep26. Percentages exclude items a facility left blank.</p>
 <script>
@@ -219,7 +218,6 @@ async function getDL(){if(DLM)return DLM;for(let i=0;i<34&&!DLM;i++){if(window.c
 async function fallback(which){const tsv=a=>a.map(r=>r.map(c=>String(c??'').replace(/[\t\n]/g,' ')).join('\t')).join('\n');
  if(which!='all'&&EXP[which]){try{await navigator.clipboard.writeText(tsv(EXP[which]));toast('File download is not available in this view – the table was copied to your clipboard, paste it into Excel');return}catch(e){}}
  toast('File download is only available when this page is opened inside claude.ai – open the artifact link there')}
-getDL();
 
 /* single facility panel */
 function chip(t,v){return el('span','chip '+(v===1?'y':v===0?'x':''),t)}
